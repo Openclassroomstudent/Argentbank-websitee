@@ -1,17 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux'
+import { BrowserRouter, Route, Routes, } from "react-router-dom";
+
+import Accueil from './pages/Accueil/Accueil';
+import SignIn from './pages/SignIn/SignIn';
+import User from './pages/User/User';
+import Error from './pages/Error/Error';
+
+import store from './store/store';
+
+import './main.scss';
+import Guard from './components/Guard/guard';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+     <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Accueil/>}/>
+        <Route path='/SignIn' element={<SignIn/>}/>
+        <Route path='/' element={<Guard/>}>
+        <Route path='User/*' element={<User/>}/>
+        </Route>
+        <Route path='Error' element={<Error/>}/>
+      </Routes>
+     </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
