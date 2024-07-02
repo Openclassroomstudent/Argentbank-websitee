@@ -9,7 +9,7 @@ basePath: /api/v1
 schemes:
   - http
 paths:
-  /user/login:
+  /user/login: # route n°1 pour se connecter
     post:
       tags:
         - User Module
@@ -33,7 +33,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/signup:
+  /user/signup: #route n°2 pour créer des users
     post:
       tags:
         - User Module
@@ -57,8 +57,8 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/profile:
-    post:
+  /user/profile: 
+    post: # route n°3 pour recupérer les infos du user
       security:
         - Bearer: []
       tags:
@@ -76,7 +76,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-    put:
+    put: # route n°4 pour modifier les infos du user
       security:
         - Bearer: []
       tags:
@@ -101,9 +101,27 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+  #/nouvelle route... n°5 modifier category
+  #-
+  #-
+  #-
+  #-
+  #-
+  #-
+  #-
+
+  #/nouvelle route... n°6 modifier note
+  #-
+  #-
+  #-
+  #-
+  #-
+  #-
+
+  
 securityDefinitions:
   Bearer:
-    type: apiKey
+    typeapiKey
     name: Authorization
     in: header
 definitions:
