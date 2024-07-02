@@ -364,7 +364,7 @@ definitions:
       body:
         type: object
         properties:
-          categorys:
+          categories:
             type: array
             items:
               type: object
