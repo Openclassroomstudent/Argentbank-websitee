@@ -1,15 +1,16 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: Bank Argent API documentation
   description: Contains all available API endpoints in this codebase
-  version: '1.0.0'
-  termsOfService: 'http://swagger.io/terms/'
+  version: "1.0.0"
+  termsOfService: "http://swagger.io/terms/"
 host: localhost:3001
 basePath: /api/v1
 schemes:
   - http
+
 paths:
-  /user/login: # route n°1 pour se connecter
+  /user/login:
     post:
       tags:
         - User Module
@@ -21,19 +22,20 @@ paths:
           description: Login Payload
           required: true
           schema:
-            $ref: '#/definitions/Login'
+            $ref: "#/definitions/Login"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Login Successfully
           schema:
-            $ref: '#/definitions/LoginResponse'
-        '400':
+            $ref: "#/definitions/LoginResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
-  /user/signup: #route n°2 pour créer des users
+
+  /user/signup:
     post:
       tags:
         - User Module
@@ -45,20 +47,21 @@ paths:
           description: Signup Payload
           required: true
           schema:
-            $ref: '#/definitions/User'
+            $ref: "#/definitions/User"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Signup Successfully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/ApiResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "500":
           description: Internal Server Error
-  /user/profile: 
-    post: # route n°3 pour recupérer les infos du user
+
+  /user/profile:
+    get: #update for get request
       security:
         - Bearer: []
       tags:
@@ -66,17 +69,19 @@ paths:
       summary: User Profile API
       description: API for fetching a user profile
       #produces:
-       # - application/json
+      # - application/json
       responses:
-        '200':
+        "200":
           description: User profile retrieved successully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/UserResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "401":
+          description: Unauthorized
+        "500":
           description: Internal Server Error
-    put: # route n°4 pour modifier les infos du user
+    put:
       security:
         - Bearer: []
       tags:
@@ -89,41 +94,119 @@ paths:
           description: Update user profile attributes
           required: true
           schema:
-            $ref: '#/definitions/UserProfile'
+            $ref: "#/definitions/UserProfile"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: User profile retrieved successully
           schema:
-            $ref: '#/definitions/ApiResponse'
-        '400':
+            $ref: "#/definitions/UserResponse"
+        "400":
           description: Invalid Fields
-        '500':
+        "401":
+          description: Unauthorized
+        "500":
           description: Internal Server Error
-  #/nouvelle route... n°5 modifier category
-  #-
-  #-
-  #-
-  #-
-  #-
-  #-
-  #-
+    
+  /transactions/categories: #created for import all categories from a futur array
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: User Profile API
+      description: API for fetching all categories
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: User profile retrieved successully
+          schema:
+            $ref: "#/definitions/CategoriesResponse"
+        "400":
+          description: Invalid Fields
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
 
-  #/nouvelle route... n°6 modifier note
-  #-
-  #-
-  #-
-  #-
-  #-
-  #-
+  /transactions/description: # created for update or add description of an operation
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: User Profile API
+      description: API for add or update descrition of operations
+      parameters:
+        - name: operationId
+          in: header
+          required: true
+          schema:
+            type: string
+          description: ID de l'opération
+        - in: body
+          name: body
+          description: Update operation description
+          required: true
+          schema:
+            $ref: "#/definitions/description"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: add or update description successully
+          schema:
+            $ref: "#/definitions/UserResponse"
+        "400":
+          description: Invalid Fields
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
 
-  
+  /transactions/category: # created for update or add category of an operation
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transactions Module
+      summary: User Profile API
+      description: API for add or update category of operations
+      parameters:
+        - name: operationId
+          in: header
+          required: true
+          schema:
+            type: string
+          description: ID de l'opération
+        - in: body
+          name: body
+          description: Update operation category
+          required: true
+          schema:
+            $ref: "#/definitions/category"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: add or update category successully
+          schema:
+            $ref: "#/definitions/UserResponse"
+        "400":
+          description: Invalid Fields
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+
 securityDefinitions:
   Bearer:
-    typeapiKey
+    type: apiKey
     name: Authorization
     in: header
+
 definitions:
   User:
     properties:
@@ -142,6 +225,40 @@ definitions:
       userName:
         type: string
         description: user public name
+      accounts:
+        type: array
+        items:
+          type: object
+          properties:
+            _id:
+              type: string
+            name:
+              type: string
+            nbAccount:
+              type: string
+            solde:
+              type: number
+            operations: # add array opartions for futur operations
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  date:
+                    type: string
+                    format: date
+                  title:
+                    type: string
+                  montant:
+                    type: number
+                  description:
+                    type: string
+                  category:
+                    type: string
+
+
+
   Login:
     properties:
       email:
@@ -150,6 +267,113 @@ definitions:
       password:
         type: string
         description: user password
+
+  UserProfile:
+    type: object
+    properties:
+      userName:
+        type: string
+
+  description:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          description: the new desciption of the operation
+
+  category:
+    type: object
+    properties:
+      category:
+        type: string
+
+
+  LoginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+
+  UserResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          id:
+            type: string
+          firstName:
+            type: string
+          lastName:
+            type: string
+          userName:
+            type: string
+          email:
+            type: string
+          createdAt:
+            type: string
+            format: date-time
+          updatedAt:
+            type: string
+            format: date-time
+          accounts:
+            type: array
+            items:
+              type: object
+              properties:
+                _id:
+                  type: string
+                name:
+                  type: string
+                nbAccount:
+                  type: string
+                solde:
+                  type: number
+                operations: # add array opartions for futur operations
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      date:
+                        type: string
+                        format: date
+                      title:
+                        type: string
+                      montant:
+                        type: number
+                      description:
+                        type: string
+                      category:
+                        type: string
+
+  CategoriesResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          categorys:
+            type: array
+            items:
+              type: object
+              properties:
+                _id:
+                  type: string
+                category:
+                  type: string
+
   ApiResponse:
     type: object
     properties:
@@ -164,13 +388,3 @@ definitions:
             type: string
           email:
             type: string
-  LoginResponse:
-    type: object
-    properties:
-      token:
-        type: string
-  UserProfile:
-    type: object
-    properties:
-      userName:
-        type: string
