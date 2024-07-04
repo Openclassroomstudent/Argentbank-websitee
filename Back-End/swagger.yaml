@@ -1,25 +1,23 @@
 swagger: "2.0"
 info:
-  title: Bank Argent API documentation
-  description: Contains all available API endpoints in this codebase
+  title: Documentation de l'API de la Banque Argent
+  description: Contient tous les points de terminaison API disponibles dans cette base de code
   version: "1.0.0"
-  termsOfService: "http://swagger.io/terms/"
 host: localhost:3001
 basePath: /api/v1
 schemes:
   - http
-
 paths:
   /user/login:
     post:
       tags:
-        - User Module
-      summary: Login
-      description: API for Login
+        - Module Utilisateur
+      summary: Connexion
+      description: API pour la connexion
       parameters:
         - in: body
           name: body
-          description: Login Payload
+          description: Informations de connexion
           required: true
           schema:
             $ref: "#/definitions/Login"
@@ -27,24 +25,23 @@ paths:
         - application/json
       responses:
         "200":
-          description: Login Successfully
+          description: Connexion réussie
           schema:
             $ref: "#/definitions/LoginResponse"
         "400":
-          description: Invalid Fields
+          description: Champs invalides
         "500":
-          description: Internal Server Error
-
+          description: Erreur interne du serveur
   /user/signup:
     post:
       tags:
-        - User Module
-      summary: Signup
-      description: API for Signup
+        - Module Utilisateur
+      summary: Inscription
+      description: API pour l'inscription
       parameters:
         - in: body
           name: body
-          description: Signup Payload
+          description: Informations d'inscription
           required: true
           schema:
             $ref: "#/definitions/User"
@@ -52,46 +49,41 @@ paths:
         - application/json
       responses:
         "200":
-          description: Signup Successfully
+          description: Inscription réussie
           schema:
             $ref: "#/definitions/ApiResponse"
         "400":
-          description: Invalid Fields
+          description: Champs invalides
         "500":
-          description: Internal Server Error
-
+          description: Erreur interne du serveur
   /user/profile:
-    get: #update for get request
+    post:
       security:
         - Bearer: []
       tags:
-        - User Module
-      summary: User Profile API
-      description: API for fetching a user profile
-      #produces:
-      # - application/json
+        - Module Utilisateur
+      summary: Récupérer le Profil Utilisateur
+      description: API pour récupérer le profil utilisateur
       responses:
         "200":
-          description: User profile retrieved successully
+          description: Profil utilisateur récupéré avec succès
           schema:
-            $ref: "#/definitions/UserResponse"
+            $ref: "#/definitions/ApiResponse"
         "400":
-          description: Invalid Fields
-        "401":
-          description: Unauthorized
+          description: Champs invalides
         "500":
-          description: Internal Server Error
+          description: Erreur interne du serveur
     put:
       security:
         - Bearer: []
       tags:
-        - User Module
-      summary: User Profile API
-      description: API for updating a user profile
+        - Module Utilisateur
+      summary: Mettre à jour le Profil Utilisateur
+      description: API pour mettre à jour le profil utilisateur
       parameters:
         - in: body
           name: body
-          description: Update user profile attributes
+          description: Mettre à jour les attributs du profil utilisateur
           required: true
           schema:
             $ref: "#/definitions/UserProfile"
@@ -99,281 +91,133 @@ paths:
         - application/json
       responses:
         "200":
-          description: User profile retrieved successully
+          description: Profil utilisateur mis à jour avec succès
           schema:
-            $ref: "#/definitions/UserResponse"
+            $ref: "#/definitions/ApiResponse"
         "400":
-          description: Invalid Fields
-        "401":
-          description: Unauthorized
+          description: Champs invalides
         "500":
-          description: Internal Server Error
-    
-  /transactions/categories: #created for import all categories from a futur array
+          description: Erreur interne du serveur
+  /transactions/{monthNumber}:
     get:
       security:
         - Bearer: []
       tags:
-        - Transactions Module
-      summary: User Profile API
-      description: API for fetching all categories
+        - Module Compte
+      summary: Récupérer les Transactions
+      description: API pour récupérer les transactions d'un compte spécifique
+      parameters:
+        - in: path
+          name: monthNumber
+          type: integer
+          required: true
+          description: Month number to call transaction
       produces:
         - application/json
       responses:
         "200":
-          description: User profile retrieved successully
+          description: Transactions récupérées avec succès
           schema:
-            $ref: "#/definitions/CategoriesResponse"
+            type: array
+            items:
+              $ref: "#/definitions/TransactionResponse"
         "400":
-          description: Invalid Fields
-        "401":
-          description: Unauthorized
+          description: ID du compte invalide
         "500":
-          description: Internal Server Error
-
-  /transactions/description: # created for update or add description of an operation
-    put:
+          description: Erreur interne du serveur
+  /transaction/{transactionId}:
+    get:
       security:
         - Bearer: []
       tags:
-        - Transactions Module
-      summary: User Profile API
-      description: API for add or update descrition of operations
+        - Module Compte
+      summary: Récupérer les Détails de la Transaction
+      description: API pour récupérer les détails d'une transaction pour un compte spécifique
       parameters:
-        - name: operationId
-          in: header
+        - in: path
+          name: transactionId
+          type: string
           required: true
-          schema:
-            type: string
-          description: ID de l'opération
-        - in: body
-          name: body
-          description: Update operation description
-          required: true
-          schema:
-            $ref: "#/definitions/description"
+          description: Id of one transaction
       produces:
         - application/json
       responses:
         "200":
-          description: add or update description successully
+          description: Détails de la transaction récupérés avec succès
           schema:
-            $ref: "#/definitions/UserResponse"
+            $ref: "#/definitions/Transaction"
         "400":
-          description: Invalid Fields
-        "401":
-          description: Unauthorized
+          description: Champs invalides
         "500":
-          description: Internal Server Error
-
-  /transactions/category: # created for update or add category of an operation
-    put:
+          description: Erreur interne du serveur
+    patch:
       security:
         - Bearer: []
       tags:
-        - Transactions Module
-      summary: User Profile API
-      description: API for add or update category of operations
+        - Module Compte
+      summary: Mettre à jour une Transaction
+      description: API pour mettre à jour les détails d'une transaction pour un compte spécifique
       parameters:
-        - name: operationId
-          in: header
+        - in: path
+          name: transactionId
+          type: string
           required: true
-          schema:
-            type: string
-          description: ID de l'opération
+          description: L'ID de la transaction
         - in: body
           name: body
-          description: Update operation category
+          description: Mise à jour des détails de la transaction
           required: true
           schema:
-            $ref: "#/definitions/category"
+            $ref: "#/definitions/TransactionUpdate"
       produces:
         - application/json
       responses:
         "200":
-          description: add or update category successully
+          description: Transaction mise à jour avec succès
           schema:
-            $ref: "#/definitions/UserResponse"
+            $ref: "#/definitions/Transaction"
         "400":
-          description: Invalid Fields
-        "401":
-          description: Unauthorized
+          description: Champs invalides
         "500":
-          description: Internal Server Error
-
+          description: Erreur interne du serveur
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
-
 definitions:
   User:
+    type: object
     properties:
       email:
         type: string
-        description: user email
+        description: Email de l'utilisateur
       password:
         type: string
-        description: user password
+        description: Mot de passe de l'utilisateur
       firstName:
         type: string
-        description: user first name
+        description: Prénom de l'utilisateur
       lastName:
         type: string
-        description: user last name
+        description: Nom de famille de l'utilisateur
       userName:
         type: string
-        description: user public name
-      accounts:
-        type: array
-        items:
-          type: object
-          properties:
-            _id:
-              type: string
-            name:
-              type: string
-            nbAccount:
-              type: string
-            solde:
-              type: number
-            operations: # add array opartions for futur operations
-              type: array
-              items:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                  date:
-                    type: string
-                    format: date
-                  title:
-                    type: string
-                  montant:
-                    type: number
-                  description:
-                    type: string
-                  category:
-                    type: string
-
-
-
+        description: Nom public de l'utilisateur
   Login:
+    type: object
     properties:
       email:
         type: string
-        description: user email
+        description: Email de l'utilisateur
       password:
         type: string
-        description: user password
-
-  UserProfile:
-    type: object
-    properties:
-      userName:
-        type: string
-
-  description:
-      type: object
-      required:
-        - description
-      properties:
-        description:
-          type: string
-          description: the new desciption of the operation
-
-  category:
-    type: object
-    properties:
-      category:
-        type: string
-
-
+        description: Mot de passe de l'utilisateur
   LoginResponse:
     type: object
     properties:
       token:
         type: string
-
-  UserResponse:
-    type: object
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          id:
-            type: string
-          firstName:
-            type: string
-          lastName:
-            type: string
-          userName:
-            type: string
-          email:
-            type: string
-          createdAt:
-            type: string
-            format: date-time
-          updatedAt:
-            type: string
-            format: date-time
-          accounts:
-            type: array
-            items:
-              type: object
-              properties:
-                _id:
-                  type: string
-                name:
-                  type: string
-                nbAccount:
-                  type: string
-                solde:
-                  type: number
-                operations: # add array opartions for futur operations
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      _id:
-                        type: string
-                      date:
-                        type: string
-                        format: date
-                      title:
-                        type: string
-                      montant:
-                        type: number
-                      description:
-                        type: string
-                      category:
-                        type: string
-
-  CategoriesResponse:
-    type: object
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          categories:
-            type: array
-            items:
-              type: object
-              properties:
-                _id:
-                  type: string
-                category:
-                  type: string
-
   ApiResponse:
     type: object
     properties:
@@ -383,8 +227,56 @@ definitions:
         type: string
       body:
         type: object
-        properties:
-          id:
-            type: string
-          email:
-            type: string
+  UserProfile:
+    type: object
+    properties:
+      userName:
+        type: string
+  Transaction:
+    type: object
+    properties:
+      id:
+        type: string
+        description: ID de la transaction
+      balance:
+        type: number
+        description: Solde après la transaction
+      amount:
+        type: number
+        description: Montant de la transaction
+      date:
+        type: string
+        format: date-time
+        description: Date de la transaction
+      type:
+        type: string
+        description: Type de transaction (par exemple, crédit, débit)
+      description:
+        type: string
+        description: Description de la transaction
+      category:
+        type: string
+        description: Catégorie de la transaction
+      note:
+        type: string
+        description: Note concernant la transaction
+  TransactionUpdate:
+    type: object
+    properties:
+      category:
+        type: string
+        description: Nouvelle catégorie de la transaction
+      note:
+        type: string
+        description: Nouvelle note concernant la transaction
+  TransactionResponse:
+    type: object
+    properties:
+      accountId:
+        type: string
+      accountName:
+        type: string
+      transactions:
+        type: array
+        items:
+          $ref: "#/definitions/Transaction"
