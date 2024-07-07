@@ -30,6 +30,8 @@ paths:
             $ref: "#/definitions/LoginResponse"
         "400":
           description: Champs invalides
+        "401":
+          description: Accès non autorisé
         "500":
           description: Erreur interne du serveur
   /user/signup:
@@ -54,6 +56,8 @@ paths:
             $ref: "#/definitions/ApiResponse"
         "400":
           description: Champs invalides
+        "409":
+          description: Conflit (utilisateur déjà existant)
         "500":
           description: Erreur interne du serveur
   /user/profile:
@@ -71,6 +75,8 @@ paths:
             $ref: "#/definitions/ApiResponse"
         "400":
           description: Champs invalides
+        "401":
+          description: Accès non autorisé
         "500":
           description: Erreur interne du serveur
     put:
@@ -96,6 +102,8 @@ paths:
             $ref: "#/definitions/ApiResponse"
         "400":
           description: Champs invalides
+        "401":
+          description: Accès non autorisé
         "500":
           description: Erreur interne du serveur
   /transactions/{monthNumber}:
@@ -111,7 +119,7 @@ paths:
           name: monthNumber
           type: integer
           required: true
-          description: Month number to call transaction
+          description: Numéro du mois pour appeler les transactions
       produces:
         - application/json
       responses:
@@ -123,6 +131,10 @@ paths:
               $ref: "#/definitions/TransactionResponse"
         "400":
           description: ID du compte invalide
+        "401":
+          description: Accès non autorisé
+        "404":
+          description: Transactions non trouvées
         "500":
           description: Erreur interne du serveur
   /transaction/{transactionId}:
@@ -138,7 +150,7 @@ paths:
           name: transactionId
           type: string
           required: true
-          description: Id of one transaction
+          description: ID de la transaction
       produces:
         - application/json
       responses:
@@ -148,6 +160,10 @@ paths:
             $ref: "#/definitions/Transaction"
         "400":
           description: Champs invalides
+        "401":
+          description: Accès non autorisé
+        "404":
+          description: Transaction non trouvée
         "500":
           description: Erreur interne du serveur
     patch:
@@ -162,7 +178,7 @@ paths:
           name: transactionId
           type: string
           required: true
-          description: L'ID de la transaction
+          description: ID de la transaction
         - in: body
           name: body
           description: Mise à jour des détails de la transaction
@@ -178,6 +194,10 @@ paths:
             $ref: "#/definitions/Transaction"
         "400":
           description: Champs invalides
+        "401":
+          description: Accès non autorisé
+        "404":
+          description: Transaction non trouvée
         "500":
           description: Erreur interne du serveur
 securityDefinitions:
